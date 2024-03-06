@@ -149,10 +149,12 @@ def make_transaction(receiver, sender):
             "부모님 용돈", "친구 빚 상환", "여행 경비 분담", "공동 구매 비용", "기부금 송금"]
     }
     amount = random.randint(1000, 5000000)
-    memo = random.choice(memos[sender.account_type])
+    memo = random.choice(memos[sender['account_type']])
     card_id = None
-    if not sender.account_type and sender.card_id:
-        card_id = sender.card_id
+    if not sender['account_type'] and sender['card_id'] and sender['account_type'] == 0:
+        if random.random() > 0.8:
+            card_id = sender['card_id']
+            
     # Placeholder logic for 'is_fill'
     is_fill = False # This should be determined by your application logic
     
@@ -161,7 +163,7 @@ def make_transaction(receiver, sender):
     
     transaction = {
         'receiver_id': receiver,
-        'sender_id': sender.id,
+        'sender_id': sender['id'],
         'amount': amount,
         'memo': memo,
         'card_id': card_id,

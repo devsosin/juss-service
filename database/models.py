@@ -1,11 +1,9 @@
 from __future__ import annotations
-from typing import List
 
 from sqlalchemy import (
     Table, Column, ForeignKey, 
-    SmallInteger, Integer, Numeric, Boolean, BigInteger,
-    String, Text,
-    DateTime, Date, JSON,
+    SmallInteger, Integer, Boolean, BigInteger,
+    String, DateTime
     )
 from sqlalchemy.orm import relationship, backref
 
@@ -56,8 +54,12 @@ class Account(Base):
     card = relationship("Card", foreign_keys=[card_id], uselist=False, 
                         primaryjoin='Card.id==Account.card_id')
 
-    # recv_trs = relationship("Transaction", back_populates='receiver', foreign_keys=[recv_tr_id])
-    # send_trs = relationship("Transaction", back_populates="sender", foreign_keys=[send_tr_id])
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'card_id': self.card_id,
+            'account_type': self.account_type
+        }
 
 class Card(Base):
     """
@@ -103,19 +105,3 @@ class Transaction(Base):
                         primaryjoin='Transaction.card_id==Card.id') 
         
     created_at = Column(DateTime(timezone=True), nullable=False, server_default=func.now())
-    
-# class Recent(Base):
-#     """
-#     최근 거래내역 조회
-#     """
-#     __tablename__ = "tb_recent"
-
-#     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-
-#     user_id = Column(Integer, ForeignKey("tb_user.id", name="fk_user_recent"), nullable=True)
-#     user = relationship("User", foreign_keys=[user_id], back_populates='recents', uselist=False, 
-#                         primaryjoin='Recent.user_id==User.id')
-    
-#     # 어떻게 관리? 시간
-#     # account_ids
-    

@@ -1,4 +1,7 @@
 .env
+*.sql
+*.txt
+*.ipynb
 
 # Created by https://www.toptal.com/developers/gitignore/api/python,macos,visualstudiocode,windows
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,macos,visualstudiocode,windows

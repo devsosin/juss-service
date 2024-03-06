@@ -59,13 +59,15 @@ test_router = APIRouter()
 async def root(request: Request):
     return {'msg': 'Hello World'}
 
-from routes import users, datas, accounts, transactions
+from routes import users, datas, accounts, transactions, transfer, cards
 
 app.include_router(test_router, prefix='/api/v1')
 app.include_router(users.router, prefix='/api/v1')
 app.include_router(datas.router, prefix='/api/v1')
 app.include_router(accounts.router, prefix='/api/v1')
 app.include_router(transactions.router, prefix='/api/v1')
+app.include_router(transfer.router, prefix='/api/v1')
+app.include_router(cards.router, prefix='/api/v1')
 
 # ---------------------------------------------------------------------------------------------
 # Memos

@@ -40,7 +40,15 @@ async def create_data(
         rd_cards = [CardCreate(**c, account_id=accounts[i].id) for i, c in enumerate(make_cards())]
         cards = await card_crud.create_cards(rd_cards)
 
+        accounts = [a.to_dict() for a in accounts]
+        # 계좌에 카드 등록
+        for card in cards:
+            for account in accounts:
+                if account['id'] == card.account_id:
+                    account['card_id'] = card.id
+
         if other_accounts:
+            # cards[0].account_id 이거에 따라서 card_id 선택하거나 선택하지 않을 수 있도록
             rd_trs = [TransactionCreate(**tr) for tr in make_transactions(accounts, other_accounts)]
             trs = await transaction_crud.create_transactions(rd_trs)
             

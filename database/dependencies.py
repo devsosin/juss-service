@@ -3,7 +3,8 @@ from .cruds import (
     UserCRUD, 
     AccountCRUD,
     CardCRUD,
-    TransactionCRUD
+    TransactionCRUD,
+    TransferCRUD
 )
 
 async def get_user_session():
@@ -25,3 +26,8 @@ async def get_transaction_session():
     async with async_session() as session:
         async with session.begin():
             yield TransactionCRUD(session)
+
+async def get_transfer_session():
+    async with async_session() as session:
+        async with session.begin():
+            yield TransferCRUD(session)
