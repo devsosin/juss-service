@@ -69,7 +69,6 @@ class Card(Base):
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     
-    card_name = Column(SmallInteger, nullable=False) # 계좌 종류 (입출금계좌, 적금, 연락처)
     card_name = Column(String(32), nullable=False)
     min_usage = Column(Integer, nullable=False)
 

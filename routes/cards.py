@@ -45,6 +45,4 @@ async def get_card(
     card_crud: CardCRUD = Depends(get_card_session),
 ):
     # if not [account for account in user.accounts if account.id == account_id]:
-
-    
     return await card_crud.read_card(card_id)
