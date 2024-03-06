@@ -52,11 +52,15 @@ class AccountCRUD(BaseCRUD):
             q = await self.db_session.execute(select(Account.id).where(Account.user_id==user_id))
         return q.scalars().all()
     
-    async def read_accounts(self, user_id:int, show_option:Union[bool, None]=None) -> List[Account]:
-        if show_option == None:
-            q = await self.db_session.execute(select(Account).where(Account.user_id==user_id))
-        else:
-            q = await self.db_session.execute(select(Account).where(and_(Account.user_id==user_id, Account.is_show==show_option)))
+    async def read_accounts(self, user_id:int, 
+                            show_option:Union[bool, None]=None, 
+                            account_type:Union[int, None]=None) -> List[Account]:
+        select_qry = select(Account).where(Account.user_id==user_id)
+        if account_type != None:
+            select_qry = select_qry.where(Account.account_type==account_type)
+        if show_option != None:
+            select_qry = select_qry.where(Account.is_show==show_option)
+        q = await self.db_session.execute(select_qry)
         return q.scalars().all()
     
     async def read_account(self, account_id:int) -> Account:

@@ -19,8 +19,9 @@ async def get_accounts(
     user: Annotated[User, Depends(get_current_active_user)],
     account_crud: AccountCRUD = Depends(get_account_session),
     is_show: Union[bool, None] = None,
-): # -> response dto
-    return await account_crud.read_accounts(user.id, is_show)
+    account_type: Union[int, None] = None,
+):
+    return await account_crud.read_accounts(user.id, is_show, account_type)
 
 @router.get('/recent')
 async def get_recent(
@@ -46,12 +47,6 @@ async def change_favorite(
     account_crud: AccountCRUD = Depends(get_account_session),
 ):
     account = await account_crud.read_account(account_id)
-    # 굳이 구분할 필요가 있나? 자신의 계좌에 자주 보낼수도 있지
-    if account.user_id == user.id:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Same Account User")
-    
     return await account_crud.toggle_favorite(account_id, not account.is_favorite)
 
 @router.get('/{account_id}')
