@@ -36,7 +36,7 @@ async def get_cards(
     if now.month == 12:
         to_date = datetime(now.year+1, 1, 1)
 
-    return await card_crud.read_cards(user.id, from_date, to_date)
+    return {'cards': await card_crud.read_cards(user.id, from_date, to_date)}
 
 @router.get('/{card_id}')
 async def get_card(

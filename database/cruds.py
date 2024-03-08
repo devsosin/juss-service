@@ -55,7 +55,7 @@ class AccountCRUD(BaseCRUD):
     async def read_accounts(self, user_id:int, 
                             show_option:Union[bool, None]=None, 
                             account_type:Union[int, None]=None) -> List[Account]:
-        select_qry = select(Account).where(Account.user_id==user_id)
+        select_qry = select(Account).where(and_(Account.user_id==user_id, Account.account_type != 2))
         if account_type != None:
             select_qry = select_qry.where(Account.account_type==account_type)
         if show_option != None:

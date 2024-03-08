@@ -12,7 +12,7 @@ DATABASE_URL = 'mysql+aiomysql://{}:{}@{}:{}/{}?charset=utf8mb4'.format(
 
 engine = create_async_engine(
     DATABASE_URL,
-    future=True, echo=True,
+    future=True, # echo=True,
 )
 
 from asyncio import current_task

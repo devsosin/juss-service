@@ -26,13 +26,13 @@ except Exception as e:
 
 app = FastAPI()
 
-# 데이터베이스 초기화
-@app.on_event("startup")
-async def startup():
-    # create db tables
-    async with engine.begin() as conn:
-        await conn.run_sync(models.Base.metadata.drop_all)
-        await conn.run_sync(models.Base.metadata.create_all)
+# # 데이터베이스 초기화
+# @app.on_event("startup")
+# async def startup():
+#     # create db tables
+#     async with engine.begin() as conn:
+#         await conn.run_sync(models.Base.metadata.drop_all)
+#         await conn.run_sync(models.Base.metadata.create_all)
 
 # 테이블 TRUNCATE
 # SET FOREIGN_KEY_CHECKS = 0;

@@ -21,7 +21,7 @@ async def get_accounts(
     is_show: Union[bool, None] = None,
     account_type: Union[int, None] = None,
 ):
-    return await account_crud.read_accounts(user.id, is_show, account_type)
+    return {'accounts': await account_crud.read_accounts(user.id, is_show, account_type)}
 
 @router.get('/recent')
 async def get_recent(

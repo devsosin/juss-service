@@ -103,6 +103,7 @@ def make_accounts():
             'account_name': account_name,
             'account_number': account_number,
             'balance': balance,
+            'is_show': random.randint(0, 1)
         })
     
     # 해당 유저의 phone 번호로 된 계좌 생성 1개 - 잔액 X 은행이름 X
@@ -114,6 +115,7 @@ def make_accounts():
         'account_name': account_name,
         'account_number': account_number,
         'balance': 0,
+        'is_show': False,
     })
 
     return random_accounts

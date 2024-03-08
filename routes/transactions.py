@@ -29,7 +29,7 @@ async def get_month_used(
         to_date = datetime(dt_now.year+1, 1, 1)
 
     account_ids = await account_crud.all_accounts(user.id, my=True)
-    return await transaction_crud.read_monthly_used(account_ids, from_date, to_date)
+    return {'amount': await transaction_crud.read_monthly_used(account_ids, from_date, to_date)}
 
 @router.get('/topay')
 async def get_to_pay(
@@ -47,7 +47,7 @@ async def get_to_pay(
         if dt_now.month == 12:
             to_date = datetime(dt_now.year+1, 1, 15)
     account_ids = await account_crud.all_accounts(user.id, my=True)
-    return await transaction_crud.read_monthly_used(account_ids, from_date, to_date)
+    return {'topay': {'date': f'{to_date.month:02d}-{to_date.day:02d}', 'amount': await transaction_crud.read_monthly_used(account_ids, from_date, to_date)}}
 
 @router.get('/{account_id}')
 async def get_transactions(
@@ -76,5 +76,4 @@ async def get_transactions(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="User is not Authorized",
             headers={"WWW-Authenticate": "Bearer"})
-    
-    return await transaction_crud.read_transactions(account_id, from_date, to_date, page)
+    return {'transactions': await transaction_crud.read_transactions(account_id, from_date, to_date, page)}

@@ -1,3 +1,4 @@
+from typing import Union
 from pydantic import BaseModel
 
 ## ACCOUNT
@@ -9,12 +10,12 @@ class AccountBase(BaseModel):
     balance: int
 
 class AccountCreate(AccountBase):
+    is_show: Union[bool, None] = True
     ...
 
 class Account(AccountBase):
     id: int
 
-    is_show: bool
     is_favorite: bool
 
     class Config:
