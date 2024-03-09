@@ -71,16 +71,24 @@ class AccountCRUD(BaseCRUD):
         q = await self.db_session.execute(select(Account).where(and_(Account.id==account_id, Account.user_id==user_id)))
         return q.scalar()
     
-    async def read_recents(self, account_ids:list[int]):
+    async def read_recents(self, account_ids:list[int], account_type: int, user_id):
         q = await self.db_session.execute(
-            select(Account.id, Account.is_favorite, func.max(Transaction.created_at))
+            select(Account.id, Account.account_name, 
+                   Account.user_id, Account.bank_name, 
+                   Account.account_number, Account.is_favorite, func.max(Transaction.created_at))
+            .where(Account.account_type==account_type)\
             .join(Transaction, Account.id == Transaction.receiver_id)\
             .filter(Transaction.sender_id.in_(account_ids))\
             .group_by(Account.id)
             .order_by(-Account.is_favorite, -func.max(Transaction.created_at))\
             .limit(10))
         
-        return [ {'id': a.id, 'is_favorite':a.is_favorite} for a in q.all()]
+        return [ {'id': a.id, 
+                  'account_name': a.account_name, 
+                  'account_number': a.account_number, 
+                  'bank_name': a.bank_name,
+                  'is_favorite':a.is_favorite,
+                  'is_own': a.user_id == user_id} for a in q.all() ]
     
     async def toggle_show(self, account_id:int, is_show:bool):
         q = await self.db_session.execute(
@@ -115,7 +123,7 @@ class CardCRUD(BaseCRUD):
             .where(Account.user_id==user_id)
             .where(or_(Transaction.created_at==None, Transaction.created_at.between(from_date, to_date)))
             .group_by(Card.id))
-        return [{'id': c.id, 'min_usage': c.min_usage, 'amount': amount, 'card_name': c.card_name} for c, amount in q.all()]
+        return [{'id': c.id, 'is_credit': c.is_credit, 'min_usage': c.min_usage, 'amount': amount, 'card_name': c.card_name} for c, amount in q.all()]
         
     async def read_card(self, card_id:int) -> Card:
         q = await self.db_session.execute(select(Card).where(Card.id == card_id))        

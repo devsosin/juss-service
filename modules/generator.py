@@ -95,7 +95,7 @@ def make_accounts():
             
         account_number = generate_account_number()
         
-        balance = random.randint(100000, 100000000)  # Balance between 십만 ~ 1억
+        balance = random.randint(100000, 5000000)  # Balance between 십만 ~ 500만
 
         random_accounts.append({
             'account_type': account_type,
@@ -136,6 +136,7 @@ def make_cards():
         cards.append({
             'card_name': card_name,
             'min_usage': generate_min_usage(),
+            'is_credit': random.randint(0, 1)
         })
 
     return cards
@@ -150,11 +151,11 @@ def make_transaction(receiver, sender):
         2: ["생일 선물 송금", "결혼 축하금 송금", "돌잔치 축하금", "장학금 지원", "생활비 지원",
             "부모님 용돈", "친구 빚 상환", "여행 경비 분담", "공동 구매 비용", "기부금 송금"]
     }
-    amount = random.randint(1000, 5000000)
+    amount = random.randint(1000, 300000)
     memo = random.choice(memos[sender['account_type']])
     card_id = None
     if not sender['account_type'] and sender['card_id'] and sender['account_type'] == 0:
-        if random.random() > 0.8:
+        if random.random() > 0.2:
             card_id = sender['card_id']
             
     # Placeholder logic for 'is_fill'

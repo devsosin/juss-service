@@ -68,14 +68,15 @@ class Card(Base):
     __tablename__ = "tb_card"
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    
     card_name = Column(String(32), nullable=False)
     min_usage = Column(Integer, nullable=False)
 
     account_id = Column(Integer, ForeignKey("tb_account.id", name="fk_account_card"), nullable=True)
     account = relationship("Account", foreign_keys=[account_id], uselist=False, 
                         primaryjoin='Card.account_id==Account.id')
-        
+    
+    is_credit = Column(Boolean, nullable=False, default=False) # True : 신용 / False : 체크
+
     transactions = relationship("Transaction", back_populates="card")
 
 class Transaction(Base):

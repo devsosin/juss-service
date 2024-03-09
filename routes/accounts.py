@@ -27,9 +27,16 @@ async def get_accounts(
 async def get_recent(
     user: Annotated[User, Depends(get_current_active_user)],
     account_crud: AccountCRUD = Depends(get_account_session),
+    account_type: Union[int, None] = None,
 ):
+    if account_type not in [0, 2]: # 입출금, 연락처
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="account_type is not valid")
+
+    # account_type으로 구분
     account_ids = await account_crud.all_accounts(user.id, my=True)
-    return await account_crud.read_recents(account_ids)
+    return {'accounts': await account_crud.read_recents(account_ids, account_type, user.id)}
 
 @router.put('/show/{account_id}')
 async def change_show(
@@ -55,5 +62,9 @@ async def get_account(
     user: Annotated[User, Depends(get_current_active_user)],
     account_crud: AccountCRUD = Depends(get_account_session),
 ):    
-    return await account_crud.check_account(user.id, account_id)
+    # user.id가 다르면
+    account = await account_crud.read_account(account_id)
+    if account.user_id != user.id:
+        account.balance = 0
+    return account
 

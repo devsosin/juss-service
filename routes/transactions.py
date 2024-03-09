@@ -38,14 +38,16 @@ async def get_to_pay(
     transaction_crud: TransactionCRUD = Depends(get_transaction_session),
 ):
     dt_now = datetime.now()
-    if dt_now.day < 16:
+    if dt_now.day < 15:
         from_date = datetime(dt_now.year, dt_now.month-1, 15)
         to_date = datetime(dt_now.year, dt_now.month, 15)
     else:
         from_date = datetime(dt_now.year, dt_now.month, 15)
-        to_date = datetime(dt_now.year, dt_now.month+1, 15)
         if dt_now.month == 12:
             to_date = datetime(dt_now.year+1, 1, 15)
+        else:
+            to_date = datetime(dt_now.year, dt_now.month+1, 15)
+
     account_ids = await account_crud.all_accounts(user.id, my=True)
     return {'topay': {'date': f'{to_date.month:02d}-{to_date.day:02d}', 'amount': await transaction_crud.read_monthly_used(account_ids, from_date, to_date)}}
 
