@@ -57,7 +57,13 @@ class Account(Base):
     def to_dict(self):
         return {
             'id': self.id,
+            'account_type': self.account_type,
             'card_id': self.card_id,
+            'bank_name': self.bank_name,
+            'account_name': self.account_name,
+            'account_number': self.account_number,
+            'balance': self.balance,
+            'is_show': self.is_show,
             'account_type': self.account_type
         }
 

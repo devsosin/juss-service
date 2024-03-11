@@ -66,5 +66,5 @@ async def get_account(
     account = await account_crud.read_account(account_id)
     if account.user_id != user.id:
         account.balance = 0
-    return account
+    return {**account.to_dict(), 'is_own': account.user_id == user.id}
 
