@@ -14,7 +14,19 @@ from database.conn import engine
 # Before Server ON
 
 try:
-    models.Base.metadata.create_all(bind=engine)
+    import asyncio
+    from sqlalchemy.sql import text
+    async def test_database_connection():
+        # 비동기 세션 생성
+        async with engine.begin() as conn:
+            # 간단한 쿼리 실행
+            result = await conn.execute(text("SELECT 1"))
+            # 결과 출력
+            print(result.scalar())
+
+    # 이벤트 루프를 사용하여 비동기 함수 실행
+    asyncio.run(test_database_connection())
+    
     # session
     print('DB Connected')
 except Exception as e:
@@ -26,13 +38,13 @@ except Exception as e:
 
 app = FastAPI()
 
-# # 데이터베이스 초기화
-# @app.on_event("startup")
-# async def startup():
-#     # create db tables
-#     async with engine.begin() as conn:
-#         await conn.run_sync(models.Base.metadata.drop_all)
-#         await conn.run_sync(models.Base.metadata.create_all)
+# 데이터베이스 초기화
+@app.on_event("startup")
+async def startup():
+    # create db tables
+    async with engine.begin() as conn:
+        await conn.run_sync(models.Base.metadata.drop_all)
+        await conn.run_sync(models.Base.metadata.create_all)
 
 # 테이블 TRUNCATE
 # SET FOREIGN_KEY_CHECKS = 0;
